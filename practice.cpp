@@ -32,6 +32,8 @@ class directory
 		void multiply();
 		void split(int key);
 		void print();
+		void search(int key);
+		void remove(int key);
 };
 
 
@@ -53,10 +55,12 @@ int main()
 			extendibleHash.insert(val);
 			break;
 		case 3:
-			// search
+			cin >> val;
+			extendibleHash.search(val);
 			break;
 		case 4:
-			// delete
+			cin >> val;
+			extendibleHash.remove(val);
 			break;
 		case 5:
 			extendibleHash.print();
@@ -196,4 +200,50 @@ void directory::insertBucket(int key)
 {
 	int hashKey = hash(key);
 	table[hashKey]->insert(key);
+}
+
+void directory::search(int key)
+{
+	int hashKey = hash(key);
+	bool exists = false;
+	for(auto j : table[hashKey]->value)
+	{
+		if(key == j)
+		{
+			exists = true;
+			break;
+		}
+	}
+	if(exists)
+	{
+		cout << "Found!!\n";
+	}
+	else
+	{
+		cout << "Not Found :(\n";
+	}
+}
+
+void directory::remove(int key)
+{
+	int hashKey = hash(key);
+	bool exists = false;
+	for(auto j : table[hashKey]->value)
+	{
+		if(key == j)
+		{
+			exists = true;
+			break;
+		}
+	}
+	auto ptr = table[hashKey]->value.begin();
+	for(int i=0; i<table[hashKey]->value.size(); i++)
+	{
+		if(ptr[i] == key)
+		{
+			table[hashKey]->value.erase(ptr+i);
+			table[hashKey]->occupancy--;
+			break;
+		}
+	}
 }
