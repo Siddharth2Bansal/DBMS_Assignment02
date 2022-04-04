@@ -23,6 +23,7 @@ class directory
 		int bucketSize;
 		int hash(int number);
 		int numdir;
+		vector <bucket*> time;
 		map<int, bucket*> table;
 		directory(int depth, int buckSize);
 		~directory();
@@ -40,27 +41,31 @@ int main()
 	int bucketSize;
 	cin >> initialDepth >> bucketSize;
 	directory extendibleHash(initialDepth, bucketSize);
-	extendibleHash.insert(0);
-	extendibleHash.insert(1);
-	extendibleHash.insert(2);
-	extendibleHash.insert(3);
-	extendibleHash.print();
-	cout << "\n\n";
-	extendibleHash.insert(4);
-	extendibleHash.print();
-	cout << "\n\n";
-	extendibleHash.insert(5);
-	extendibleHash.print();
-	cout << "\n\n";
-	extendibleHash.insert(6);
-	extendibleHash.print();
-	cout << "\n\n";
-	extendibleHash.insert(7);
-	extendibleHash.print();
-	cout << "\n\n";
-	extendibleHash.insert(8);
-	extendibleHash.print();
-	cout << "\n\n";
+	int code, val;
+	bool loop = true;
+	while(loop)
+	{
+		cin >> code;
+		switch (code)
+		{
+		case 2:
+			cin >> val;
+			extendibleHash.insert(val);
+			break;
+		case 3:
+			// search
+			break;
+		case 4:
+			// delete
+			break;
+		case 5:
+			extendibleHash.print();
+			break;
+		case 6:
+			loop = false;
+			break;
+		}
+	}
 }
 
 //////////////////////////////////////////////// Bucket Functions //////////////////////////////////////////////////
@@ -106,6 +111,7 @@ directory::directory(int depth, int buckSize)
 	for(int i=0; i<numdir; i++)
 	{
 		table[i] = new bucket(bucketSize, gd);
+		time.push_back(table[i]);
 	}
 }
 
@@ -155,6 +161,7 @@ void directory::split(int key)
 	int k1 = key % oldSize;
 	bucket* ptr1 = table[key];
 	bucket* ptr2 = new bucket(bucketSize, ptr1->ld);
+	time.push_back(ptr2);
 	for(int i=0; i<numdir; i++)
 	{
 		if((i % oldSize == k1) && (i % newSize != k1))
@@ -173,31 +180,15 @@ void directory::split(int key)
 	{
 		insert(j);
 	}
-	// table[key]->ld ++;
-	// int n = table[key]->ld;
-	// bucket* ptr1 = table[key];
-	// bucket* ptr2 = new bucket(bucketSize, n);
-	// int n1 = n/2;
-	// int k = key % n1;
-	// for(int i=0; i<numdir; i++)
-	// {
-	// 	if( (i % n1 == k) && (i % n != k))
-	// 	{
-	// 		table[i] = ptr2;
-	// 	}
-	// }
 }
 
 void directory::print()
 {
-	set<bucket*> list;
-	for(int i=0; i<numdir; i++)
+	cout << gd << '\n' << time.size() << '\n';
+
+	for(auto j : time)
 	{
-		list.insert(table[i]);
-	}
-	for(auto j : list)
-	{
-		j->printBucket();
+		cout << j->occupancy << ' ' << j->ld << '\n';
 	}
 }
 
